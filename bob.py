@@ -416,7 +416,11 @@ if Nb_from_bob == Nb:
     # =========================================  STEP 4 - FROM ALICE   =============================================================
     print("Let's Talks with Alice")
     key_alice = client_socket.recv(1024).decode()
-	
+    print("key_alice: ", key_alice)
+    key_alice = eval(key_alice)
+    key_alice = decrypt_rsa(key_alice, d, n)
+    
+
     # receive chipertext
     chipertext_from_alice = client_socket.recv(1024).decode()
     print("chipertext from alice: ", chipertext_from_alice)

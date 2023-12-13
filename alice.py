@@ -417,13 +417,19 @@ if Na_from_bob == Na:
     print("Na is valid")
     Nb = decrypt_rsa(Nb, d, n)
 
-    # =========================================  STEP 3 - TO BOB   =============================================================
+    # =========================================  STEP 3 - TO BOB   ==============================================
     Nb_encrypted = encrypt_rsa(Nb, e_bob, n_bob)
     Nb_encrypted = str(Nb_encrypted)
     client_socket.send(Nb_encrypted.encode())
-    # =========================================  STEP 4 - TO BOB   =============================================================
+    # =========================================  STEP 4 - TO BOB   ==============================================
     print("Let's Talks with bob")
-    client_socket.send(key_alice.encode())
+    kirim_key_alice = encrypt_rsa(key_alice, e_bob, n_bob)
+    # print("kirim_key_alice sebelum str: ", kirim_key_alice)
+    kirim_key_alice = str(kirim_key_alice)
+    # print("kirim_key_alice: ", kirim_key_alice)
+    
+    client_socket.send(kirim_key_alice.encode())
+    
     plaintext = "12345678AABBCDEE"
     type = "encrypt"
     chipertext = key_exchange_client(key_alice, plaintext, type)
@@ -436,9 +442,9 @@ else:
     client_socket.close()
 
 
-# =============================================================================
-# ============================================================================================================
-# =========================================  STEP 1 - FROM BOB   =============================================================
+# ===========================================================================================================
+# ===========================================================================================================
+# =========================================  STEP 1 - FROM BOB   ============================================
 print("=========== Receive from Bob ===========")
 Nb = client_socket.recv(1024).decode()
 Nb = eval(Nb)
@@ -451,14 +457,14 @@ Na_encrypted = encrypt_rsa(Na, e_bob, n_bob)
 print("Na_encrypted: ", Na_encrypted)
 # Na_encrypted = str(Na_encrypted)
 
-# =========================================  STEP 2 - FROM BOB   =============================================================
+# =========================================  STEP 2 - FROM BOB   ==============================================
 pair_2 = Na_encrypted + [Nb]
 print("pair_2: ", pair_2)
 pair_2 = str(pair_2)
 
 client_socket.send(pair_2.encode())
 
-# =========================================  STEP 3 - FROM BOB   =============================================================
+# =========================================  STEP 3 - FROM BOB   ===============================================
 Na_from_bob = client_socket.recv(1024).decode()
 Na_from_bob = eval(Na_from_bob)
 
@@ -466,7 +472,7 @@ Na_from_bob = decrypt_rsa(Na_from_bob, d, n)
 
 if Na_from_bob == Na:
     print("Na is valid")
-    # =========================================  STEP 4 - FROM BOB   =============================================================
+    # =========================================  STEP 4 - FROM BOB   ===========================================
     print("Let's Talks with Bob")
     key_bob = client_socket.recv(1024).decode()
 	
